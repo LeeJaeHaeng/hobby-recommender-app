@@ -4,12 +4,13 @@ Flask 메인 애플리케이션
 """
 
 from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flask_cors import CORS
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # 환경 변수 로드
 load_dotenv()
@@ -29,6 +30,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False  # SQL 쿼리 로깅 (개발 시 True)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
 
+# JWT 설정
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', app.config['SECRET_KEY'])
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
+
+# JWT 초기화
+jwt = JWTManager(app)
+
 # JSON 인코딩 설정 (한글 지원)
 app.config['JSON_AS_ASCII'] = False
 
@@ -47,6 +56,12 @@ migrate = Migrate(app, db)
 # Blueprint 등록
 from app.api.users import users_bp
 app.register_blueprint(users_bp)
+from app.api.auth import auth_bp
+from app.api.profile import profile_bp
+from app.api.survey import survey_bp
+app.register_blueprint(profile_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(survey_bp)
 
 # 로깅 설정
 logging.basicConfig(
