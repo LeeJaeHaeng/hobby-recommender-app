@@ -55,13 +55,19 @@ migrate = Migrate(app, db)
 
 # Blueprint 등록
 from app.api.users import users_bp
-app.register_blueprint(users_bp)
 from app.api.auth import auth_bp
 from app.api.profile import profile_bp
 from app.api.survey import survey_bp
+from app.api.hobbies import hobbies_bp
+from app.api.recommendations import recommendations_bp
+from app.api.gatherings import gatherings_bp
+app.register_blueprint(users_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(survey_bp)
+app.register_blueprint(hobbies_bp)
+app.register_blueprint(recommendations_bp)
+app.register_blueprint(gatherings_bp)
 
 # 로깅 설정
 logging.basicConfig(

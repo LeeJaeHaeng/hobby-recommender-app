@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from app import app; print(''App loaded successfully'')\")",
+      "Bash(python:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
